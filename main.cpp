@@ -12,7 +12,7 @@ int main(){
 	
 	char choice;
 	do{
-		std::cout << "**************" << '\n' << "S.C.A.U.T Main Menu" << '\n' << "**************" << '\n' << '\n';
+		std::cout << "**************" << '\n' << "S.C.A.U.T" << '\n' << "**************" << '\n' << '\n';
 		std::cout << "Pick an option:" << '\n' << "1. Create Secret" << '\n' << "2. Uncover Secret" << '\n' << "3. Quit" << '\n';
 		
 		std::cin >> choice;
@@ -27,10 +27,10 @@ int main(){
 			uncoverMode();
 			std::cout << '\n' << '\n';
 			break;
-		case '3':
+	*/	case '3':
 			std::cout << '\n' << "Quitting program...";
 			break;
-	*/	default:
+		default:
 			std::cout << '\n' << "Invalid input. Try again: ";
 			break;
 		}
@@ -42,7 +42,7 @@ void createMode(){
 	
 	char choice;
 	do{
-		std::cout << "**************" << '\n' << "S.C.A.U.T Creation Mode" << '\n' << "**************" << '\n' << '\n';
+		std::cout << '\n' << "**************" << '\n' << "Creation Mode" << '\n' << "**************" << '\n' << '\n';
 		std::cout << "Pick an option:" << '\n' << "1. Create Secret out of file" << '\n' << "2. Create Secret per command line" << '\n' << "3. Quit Creation Mode" << '\n';
 		
 		std::cin >> choice;
@@ -55,10 +55,10 @@ void createMode(){
 		case '2':
 			createOutOfCommandline();
 			break;
-	/*	case '3':
-			std::cout << '\n' << "Quitting Creation Mode...";
+		case '3':
+			std::cout << '\n' << "Quitting Creation Mode..." << '\n' << '\n';
 			break;
-	*/	default:
+		default:
 			std::cout << '\n' << "Invalid input. Try again: ";
 			break;
 		}
@@ -70,7 +70,7 @@ void createOutOfFile(){
 	std::string importFilename;
 	std::string exportFilename;
 
-	std::cout << '\n' << "Enter the name of the file you want to turn into a secret: ";
+	std::cout << '\n' << '\n' << "Enter the name of the file you want to turn into a secret: ";
 	std::cin >> importFilename;
 	std::cout << '\n' << "Enter the name of the file you want the secret written in: ";
 	std::cin >> exportFilename;
@@ -109,8 +109,10 @@ void createOutOfCommandline(){
 
 	std::cout << "Enter the name of the file you want the secret written in: ";
 	std::cin >> exportFilename;
-	std::cout << '\n' << "Paste/Write what you want to turn into a Secret: ";
+	std::cin.ignore(256, '\n');
+	std::cout << "Paste/Write what you want to turn into a Secret: ";
 	std::cin >> importContent;
+	std::cin.ignore(256, '\n');
 
 	std::ofstream ExportFile(exportFilename);
 	ExportFile << secretFormula(importContent);
@@ -118,31 +120,25 @@ void createOutOfCommandline(){
 }
 
 std::string secretFormula(std::string &content){
-	char piNum[1];
+	char keyNum[1];
+	char* keyNumPointer = keyNum;
 	std::string result;
-	std::ifstream piFile("pi_dec_1m.txt");
-	if(!piFile.is_open()){
-	std::cout << '\n' << "Error reading PI file";
+	std::string keyFileName;
+	std::cout << "Enter the name of your keyfile: ";
+	std::cin >> keyFileName;
+	std::cin.ignore(256, '\n');
+	std::ifstream keyFile(keyFileName);
+	if(!keyFile.is_open()){
+	std::cout << '\n' << "Error reading key file";
+	return "Error";
 	}
-
 	for(int i = 0; i < content.length(); i++){
-		int asciiVal = (int)content.at(i) + 12;
-		piFile.read(piNum, 1);
-		piFile.seekg(1, std::ios::cur);
-		if(piNum[0] == '0'){
-		piNum[0] = '2';
-		}
-		asciiVal *= piNum[0] - '0';
-		if(asciiVal < 10){
-			result += "000" + std::to_string(asciiVal);
-		} else if(asciiVal < 100){
-			result += "00" + std::to_string(asciiVal);
-		} else if(asciiVal < 1000){
-			result += "0" + std::to_string(asciiVal);
-		} else {
-			result += std::to_string(asciiVal);
-		}
+		int temp = int(content.at(i));
+		keyFile.read(keyNumPointer, 1);
+		temp += int(keyNum[0]);
+		result += std::to_string(temp) + ".,";
 	}
-	piFile.close();
+	keyFile.close();
+	std::cout << "*********   Secret Created :)   *********" << '\n';
 	return result;
 };
