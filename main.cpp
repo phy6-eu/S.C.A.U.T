@@ -87,7 +87,7 @@ void createOutOfFile(){
 		return;
 	}
 	
-	std::ofstream ExportFile(exportFilename);
+	std::ofstream ExportFile(exportFilename, std::ios::app);
 	if(!ExportFile.is_open()){
 		std::cout << '\n' << "Error with creating export file";
 		return;
@@ -119,7 +119,7 @@ void createOutOfCommandline(){
 	std::getline(std::cin, importContent);
 	
 
-	std::ofstream ExportFile(exportFilename);
+	std::ofstream ExportFile(exportFilename, std::ios::app);
 	ExportFile << secretFormula(importContent, exportFilename, "None (Out of command line)");
 	ExportFile.close();
 }
@@ -146,6 +146,7 @@ std::string secretFormula(std::string &content, std::string exportFilename, std:
 	std::cin >> option;
 	
 	if(std::toupper(static_cast<unsigned char>(option)) != 'Y'){
+		std::cout << "***** Aborted process *****\n";
 		return "";
 	}
 
@@ -188,6 +189,7 @@ std::string reverseSecretFormula(std::string &content, std::string exportFilenam
 	std::cin >> option;
 	
 	if(std::toupper(static_cast<unsigned char>(option)) != 'Y'){
+		std::cout << "***** Aborted process *****\n";
 		return "";
 	}
 
@@ -248,7 +250,7 @@ void uncoverOutOfCommandline(){
 	std::getline(std::cin, importContent);
 	
 
-	std::ofstream ExportFile(exportFilename);
+	std::ofstream ExportFile(exportFilename, std::ios::app);
 	ExportFile << reverseSecretFormula(importContent, exportFilename, "None (Out of command line)");
 	ExportFile.close();
 }
@@ -271,7 +273,7 @@ void uncoverOutOfFile(){
 		return;
 	}
 	
-	std::ofstream ExportFile(exportFilename);
+	std::ofstream ExportFile(exportFilename, std::ios::app);
 	if(!ExportFile.is_open()){
 		std::cout << '\n' << "Error with creating export file";
 		return;
