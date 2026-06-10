@@ -161,7 +161,7 @@ std::string secretFormula(std::string &content, std::string exportFilename, std:
 		result += std::to_string(temp) + ".";
 	}
 	keyFile.close();
-	std::cout << "*********   Secret created :)   *********" << '\n';
+	std::cout << "\n*********   Secret created :)   *********" << '\n';
 	return result;
 };
 
@@ -196,18 +196,22 @@ std::string reverseSecretFormula(std::string &content, std::string exportFilenam
 	while(!content.empty()){
 		const char* pointa = content.c_str();
 		int charLength = strcspn(pointa, delim);
-		int temp = std::stoi(content.substr(0, charLength));
+		std::string temp1= content.substr(0, charLength);
+		if(temp1.empty()){
+		break;
+		}
+		int temp2 = std::stoi(temp1);
 		content.erase(0, charLength+1);
 		if(keyFile.peek() == EOF){
 			keyFile.clear();
 			keyFile.seekg(0);
 		}
 		keyFile.read(keyNumPointer, 1);
-		temp -= static_cast<int>(keyNum[0]);
-		result += char(temp);
+		temp2 -= static_cast<int>(keyNum[0]);
+		result += char(temp2);
 	}
 	keyFile.close();
-	std::cout << "*********   Secret uncovered :)   *********" << '\n';
+	std::cout << "\n*********   Secret uncovered :)   *********" << '\n';
 	return result;
 }
 
