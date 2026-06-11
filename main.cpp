@@ -18,6 +18,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
+#include <cctype>
 
 void createMode();
 void createOutOfFile();
@@ -93,7 +94,7 @@ void createOutOfFile(){
 	std::cout << '\n' << '\n' << "Enter the name of the file you want to turn into a secret: ";
 	std::getline(std::cin, importFilename);
 	
-	std::cout << "Enter the name of the file you want the secret written in: ";
+	std::cout << "Name the outputted file: ";
 	std::getline(std::cin, exportFilename);
 	
 	
@@ -104,7 +105,7 @@ void createOutOfFile(){
 		return;
 	}
 	
-	std::ofstream ExportFile(exportFilename, std::ios::app);
+	std::ofstream ExportFile("SCAUT-EXPORT-" + exportFilename);
 	if(!ExportFile.is_open()){
 		std::cout << '\n' << "Error with creating export file";
 		return;
@@ -116,7 +117,7 @@ void createOutOfFile(){
 	char* buffer = new char[length];
 	
 	ImportFile.read(buffer, length);
-	std::string importedFileContent = buffer;
+	std::string importedFileContent(buffer, length);
 	delete[] buffer;
 	
 	ExportFile << secretFormula(importedFileContent, exportFilename, importFilename);
@@ -129,14 +130,14 @@ void createOutOfCommandline(){
 	std::string exportFilename;
 	std::string importContent;
 
-	std::cout << "Enter the name of the file you want the secret written in: ";
+	std::cout << "Name the outputted file: ";
 	std::getline(std::cin, exportFilename);
 	
 	std::cout << "Paste/Write what you want to turn into a Secret: ";
 	std::getline(std::cin, importContent);
 	
 
-	std::ofstream ExportFile(exportFilename, std::ios::app);
+	std::ofstream ExportFile("SCAUT-EXPORT-" + exportFilename);
 	ExportFile << secretFormula(importContent, exportFilename, "None (Out of command line)");
 	ExportFile.close();
 }
@@ -212,8 +213,8 @@ std::string reverseSecretFormula(std::string &content, std::string exportFilenam
 		return "";
 	}
 
+	const char* pointa = content.c_str();
 	while(!content.empty()){
-		const char* pointa = content.c_str();
 		int charLength = strcspn(pointa, delim);
 		std::string temp1= content.substr(0, charLength);
 		if(temp1.empty() || temp1 == ""){
@@ -266,14 +267,14 @@ void uncoverOutOfCommandline(){
 	std::string exportFilename;
 	std::string importContent;
 
-	std::cout << "Enter the name of the file (it will create one if it doesn't exist) you want the uncovered secret written in: ";
+	std::cout << "Name of the outputted file: ";
 	std::getline(std::cin, exportFilename);
 	
 	std::cout << "Paste/Write what you want to turn into a uncover: ";
 	std::getline(std::cin, importContent);
 	
 
-	std::ofstream ExportFile(exportFilename, std::ios::app);
+	std::ofstream ExportFile("SCAUT-EXPORT-" + exportFilename);
 	ExportFile << reverseSecretFormula(importContent, exportFilename, "None (Out of command line)");
 	ExportFile.close();
 }
@@ -285,7 +286,7 @@ void uncoverOutOfFile(){
 	std::cout << '\n' << "Enter the name of the file that has a secret to uncover: ";
 	std::getline(std::cin, importFilename);
 	
-	std::cout << "Enter the name of the file you want the uncovered secret written in: ";
+	std::cout << "Name the outputted file: ";
 	std::getline(std::cin, exportFilename);
 	
 	
@@ -296,7 +297,7 @@ void uncoverOutOfFile(){
 		return;
 	}
 	
-	std::ofstream ExportFile(exportFilename, std::ios::app);
+	std::ofstream ExportFile("SCAUT-EXPORT-" + exportFilename);
 	if(!ExportFile.is_open()){
 		std::cout << '\n' << "Error with creating export file";
 		return;
